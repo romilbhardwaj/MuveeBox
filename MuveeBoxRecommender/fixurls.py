@@ -1,5 +1,3 @@
-#URL Fetcher from imdb to fix the urls in u.items. Creates a new ufixed.item db.
-
 import json
 import urllib2
 
