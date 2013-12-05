@@ -14,7 +14,18 @@ def genrelist(moviegenres):
 	for genre in moviegenres:
 		genreflags[genre]=1
 	return [genreflags['unknown'],genreflags['Action'],genreflags['Adventure'],genreflags['Animation'],genreflags['Children\'s'],genreflags['Comedy'],genreflags['Crime'],genreflags['Documentary'],genreflags['Drama'],genreflags['Fantasy'],genreflags['Film Noir'],genreflags['Horror'],genreflags['Musical'],genreflags['Mystery'],genreflags['Romance'],genreflags['Sci-Fi'],genreflags['Thriller'],genreflags['War'],genreflags['Western']]
-	
+
+fixed_items = {} # keys: DB ID, values: IMDB ID
+reverse_fixed_items = {} # keys: IMDB ID, values: DB ID
+
+fbaba = open('ufixed.item', 'r')
+
+for line in fbaba.readlines():
+	fixed_items[int(line.split('|')[0])] = line.split('|')[1]
+	reverse_fixed_items[line.split('|')[1]] = int(line.split('|')[0])
+
+fbaba.close()
+
 #Given a FB account and Graph API token, this inputs the individual movie ratings returns the dictionary of the movies with imdb_id as the key, and a dict of imdb_rating, genres_vector, user_rating (keys) as the value
 def getmovieratings(account, token):
 	graph = facebook.GraphAPI(token)
@@ -25,10 +36,11 @@ def getmovieratings(account, token):
 
 	for movie in movies['data']:
 		try:
-			if (i>11):
+			if (i>6):
 				break
 			usermovie = {}
 			moviename = movie['name']
+			print moviename
 			tofind=moviename
 			searchurl="http://www.omdbapi.com/?t=" + urllib2.quote(tofind)
 			movielist = json.load(urllib2.urlopen(searchurl))
@@ -42,28 +54,39 @@ def getmovieratings(account, token):
 						continue
 				except TypeError:
 					imdbmovie = movielist[0]
-					userrating = input("Enter your rating for " + imdbmovie['title'])
-					op = "945\t" + str(imdbmovie['imdb_id']) + "\t" + str(userrating) +  "\t" + str(i) + "\n"
+					if imdbmovie['imdb_id'] in reverse_fixed_items:				
+						
+						userrating = input("Enter your rating for " + imdbmovie['Title'])
+						op = "945\t" + str(int(reverse_fixed_items[imdbmovie['imdb_id']])) + "\t" + str(userrating) +  "\t" + str(i) + "\n"
+						i+=1
+					else:
+						continue
 					genreop = imdbmovie['imdb_id']
 					for genre in genrelist(imdbmovie['genre']):
 						genreop = genreop + "\t" + str(genre)
 					genreop = genreop + "\n"		
-					usergenres.write(genreop)				
-					i+=1
+					usergenres.write(genreop)
 					fixeddb.write(op)
 			else:
 				imdbmovie = movielist
-				userrating = input("Enter your rating for " + imdbmovie['Title'])
-				op = "945\t" + str(imdbmovie['imdbID']) + "\t" + str(userrating) +  "\t" + str(i) + "\n"
+				if imdbmovie['imdbID'] in reverse_fixed_items:
+					
+					userrating = input("Enter your rating for " + imdbmovie['Title'])
+					op = "945\t" + str(int(reverse_fixed_items[imdbmovie['imdbID']])) + "\t" + str(userrating) +  "\t" + str(i) + "\n"
+					i+=1
+				else:
+					continue
 				genreop = imdbmovie['imdbID']
 				for genre in genrelist(imdbmovie['Genre'].split(", ")):
 					genreop = genreop + "\t" + str(genre)
 				genreop = genreop + "\n"
 				usergenres.write(genreop)
-				i+=1
 				fixeddb.write(op)
 		except KeyError:
 			print "No IMDB Data found for " + moviename
+		except ValueError:
+			print "No IMDB Data found for " + moviename
+	fixeddb.close()
 	return usermovieinfo
 	
 def getmovietitles(imdbids):
@@ -72,9 +95,18 @@ def getmovietitles(imdbids):
 		searchurl="http://mymovieapi.com/?id=" + imdbid + "&type=json&plot=simple&episode=1&lang=en-US&aka=simple&release=simple&business=0&tech=0"
 		movielist = json.load(urllib2.urlopen(searchurl))
 		imdbmovie = movielist
-		print str(imdbmovie['title'])
-		
+		try:
+			print str(imdbmovie['title'])
+		except KeyError:
+			continue
+
 account = raw_input('Enter your account name (eg apoorva.mittal2)')
-token="CAACEdEose0cBANY4EtNN4PWSVbpz29AcdrFJ19iBzLL32V0RZCTo64b6TTdVegJFgzoG952pZCepoMPqhGHpdwiOcZAlFH11bzxbzvZCvFZC3wb8reczTkDkMDYOpeZBHrZBUqcamZAFyIaxnmulxaDyYOKbUhmZCjbbB5ddrYZAweJqnFHwHgcBeu2jGKNViJ37YZD"
-#print getmovieratings(account, token)
-#getmovietitles(["tt0375174", "tt1639426", "tt0114709"])
+token="CAACEdEose0cBANqUvOOdsnQLL1fDuHgo6KK0e5ZALrfcuP7NsqPWb2kulSCGq4FjYGtDFky26aLD32WTHfppgmwwcTBx36YQkfvBJdWwSiNFZCQxYSyShiyLkDtZAZA9foS1hWZAUaneMOpEq2kbGlZCdG5F2JaZBLA77Y5VIvrpzK9qmOTzPMwnMHuEGpQHJ8ZD"
+getmovieratings(account, token)
+#print 'FLAG'
+
+from main_recommender import recommender1
+finalList = recommender1('usermovies.txt')
+
+getmovietitles(finalList)
+

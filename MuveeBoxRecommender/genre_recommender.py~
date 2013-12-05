@@ -182,7 +182,8 @@ class recommender():
 					if item in userRatings.keys():
 						#print(item)
 						
-						rating += userRatings[item] *  (self.pearson(self.testdata[username],self.traindata[user]))/totaldistance 
+						rating += userRatings[item] *  (self.pearson(self.testdata[username],self.traindata[user]))/
+						totaldistance 
 				
 			
 			self.newtop50[item]=rating
@@ -276,9 +277,9 @@ class recommender():
 		#pprint(self.genreDistance)
 		#pprint(self.testdata)
 		self.getRecommendations()
-		print self.recommendations
-		print len(self.recommendations)
+		#print self.recommendations
+		#print len(self.recommendations)
 
-r = recommender()
-r.main()
+#r = recommender()
+#r.main()
 

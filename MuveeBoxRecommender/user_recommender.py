@@ -137,8 +137,12 @@ class recommender():
 					
 					if item in userRatings.keys():
 						#print(item)
+						#print("TOTAL: " + str(totaldistance))
+						if(totaldistance!=0):
 						
-						rating += userRatings[item] *  (self.pearson(self.testdata[username],self.traindata[user]))/totaldistance
+							rating += userRatings[item] *  (self.pearson(self.testdata[username],self.traindata[user]))/totaldistance
+						else:
+							rating=rating
 				
 			#print(item)
 			self.newtopMovies[item]=rating
@@ -171,5 +175,5 @@ class recommender():
 		'''
 	   	
 	   	
-r = recommender()
-r.main()
+#r = recommender()
+#r.main()

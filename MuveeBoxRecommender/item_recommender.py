@@ -121,6 +121,7 @@ class itemRecommender():
 	def main(self):
 		self.loadMovieDB('u.item', self.items)
 		self.loadTestDB('sample.data', self.testdata)
+		print self.testdata
 		self.calculateSimilarity()
 		self.obtain100movies()
 		#pprint(self.items)
@@ -137,6 +138,6 @@ class itemRecommender():
 		#pprint(self.topSimilarity)
 		self.getRecommendations()
 		
-r = itemRecommender()
-r.main()
+#r = itemRecommender()
+#r.main()
 

@@ -279,6 +279,6 @@ class recommender():
 		#print self.recommendations
 		#print len(self.recommendations)
 
-r = recommender()
-r.main()
+#r = recommender()
+#r.main()
 

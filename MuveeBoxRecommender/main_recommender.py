@@ -2,10 +2,10 @@ from item_recommender import itemRecommender as IR
 from user_recommender import recommender as UR
 from genre_recommender import recommender as GR
 
-def recommender():
+def recommender1(testPath):
 	ir = IR()
 	ir.loadMovieDB('u.item', ir.items)
-	ir.loadTestDB('sample.data', ir.testdata)
+	ir.loadTestDB(testPath, ir.testdata)
 	ir.calculateSimilarity()
 	ir.obtain100movies()
 	ir_list = ir.getRecommendations()
@@ -14,7 +14,7 @@ def recommender():
 	ur.traindata = {}
 	ur.testdata = {}
 	ur.loadBookDB('u.data', ur.traindata)
-	ur.loadBookDB('sample.data', ur.testdata)
+	ur.loadBookDB(testPath, ur.testdata)
 	mainuser = 945 
 	ur.movies = {}
 	ur.calNeighbors(mainuser)
@@ -25,7 +25,7 @@ def recommender():
 	gr.traindata = {}
 	gr.testdata = {}
 	gr.loadBookDB('u.data', gr.traindata)
-	gr.loadBookDB('sample.data', gr.testdata)
+	gr.loadBookDB(testPath, gr.testdata)
 	gr.loadMovieDB('u.item', gr.items)
 	gr.trainGenreScore = gr.calculateGenreScore(gr.traindata)
 	gr.testGenreScore = gr.calculateGenreScore(gr.testdata)

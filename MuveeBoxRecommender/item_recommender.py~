@@ -137,6 +137,6 @@ class itemRecommender():
 		#pprint(self.topSimilarity)
 		self.getRecommendations()
 		
-r = itemRecommender()
-r.main()
+#r = itemRecommender()
+#r.main()
 
