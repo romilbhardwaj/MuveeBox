@@ -65,7 +65,16 @@ def getmovieratings(account, token):
 		except KeyError:
 			print "No IMDB Data found for " + moviename
 	return usermovieinfo
-
+	
+def getmovietitles(imdbids):
+	print "Here are some of the movies you should catch"
+	for imdbid in imdbids:
+		searchurl="http://mymovieapi.com/?id=" + imdbid + "&type=json&plot=simple&episode=1&lang=en-US&aka=simple&release=simple&business=0&tech=0"
+		movielist = json.load(urllib2.urlopen(searchurl))
+		imdbmovie = movielist
+		print str(imdbmovie['title'])
+		
 account = raw_input('Enter your account name (eg apoorva.mittal2)')
 token="CAACEdEose0cBANY4EtNN4PWSVbpz29AcdrFJ19iBzLL32V0RZCTo64b6TTdVegJFgzoG952pZCepoMPqhGHpdwiOcZAlFH11bzxbzvZCvFZC3wb8reczTkDkMDYOpeZBHrZBUqcamZAFyIaxnmulxaDyYOKbUhmZCjbbB5ddrYZAweJqnFHwHgcBeu2jGKNViJ37YZD"
-print getmovieratings(account, token)
+#print getmovieratings(account, token)
+#getmovietitles(["tt0375174", "tt1639426", "tt0114709"])
