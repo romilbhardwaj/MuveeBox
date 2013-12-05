@@ -276,8 +276,8 @@ class recommender():
 		#pprint(self.genreDistance)
 		#pprint(self.testdata)
 		self.getRecommendations()
-		#print self.recommendations
-		#print len(self.recommendations)
+		print self.recommendations
+		print len(self.recommendations)
 
 r = recommender()
 r.main()
